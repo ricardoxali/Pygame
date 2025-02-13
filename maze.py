@@ -23,12 +23,18 @@ def desenhar_maze(m):
           pygame.draw.rect(screen, cor, (x * cell_size, y * cell_size, cell_size, cell_size))
 
 def tela_abertura():
+  # Fundo preto com transparência
   fundo = pygame.Surface([screen_width, screen_height])
   fundo.fill((0,0,0))
   fundo.set_alpha(190)
   screen.blit(fundo, (0,0))
-  
-  
+
+  # Texto
+  font = pygame.font.SysFont('Arial', 38, bold = True)
+  objetivo = font.render(f'OBJETIVO:', True, 'white')
+  screen.blit(objetivo, (200, 35))
+ 
+  # Cores
   red = pygame.image.load('imagens\\red.png')
   screen.blit(red, (0,0))
 
