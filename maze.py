@@ -99,6 +99,17 @@ def cor_jogador():
               if event.key == pygame.K_y:
                   return 'y'
 
+def mover_jogador(dx, dy):
+    global player_x, player_y
+    nx, ny = player_x + dx, player_y + dy
+    if maze[ny][nx] == 0:  # Verifica se o próximo movimento é um caminho
+        player_x, player_y = nx, ny
+
+def cor_escolhida(a):
+   if a == 'r':
+      cor, light_cor = (255, 0, 0), (255, 125, 125)
+  if a == 
+
 
 cell_size = 32
 maze_width = 41
@@ -109,16 +120,18 @@ screen_height = maze_height * cell_size
 # Cores
 white = (255, 255, 255)
 black = (0, 0, 0)
-red = (255, 0, 0)
-green = (0, 255, 0)
-blue = (0, 0, 255)
-cyan = (0, 255, 255)
-magenta = (255, 0, 255)
-yellow = (255, 255, 0)
+red, light_red = (255, 0, 0), (255, 125, 125)
+green, light_green = (0, 255, 0), (125, 255, 125)
+blue, light_blue = (0, 0, 255), (125, 125, 255)
+cyan, light_cyan = (0, 255, 255), (200, 255, 225)
+magenta, light_magenta = (255, 0, 255), (255, 200, 255)
+yellow, light_yellow = (255, 255, 0), (225, 255, 200)
 
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('Labirinto')
+
+player_x, player_y = 1, 1  # Posição inicial do jogado
 
 maze = [[1 for _ in range(maze_width)] for _ in range(maze_height)] # 1 = parede; 0 = caminho;
 direcoes = [
@@ -140,8 +153,17 @@ mostrar_abertura = True
 running = True
 while running:
   for event in pygame.event.get():
-    if event.type == pygame.QUIT:
+    if event.type == pygame.QUIT: # Sair do jogo
       running = False
+    if event.type == pygame.KEYDOWN: # Mover o jogador
+      if event.key in (pygame.K_w, pygame.K_UP):
+        mover_jogador(0, -1)  # Cima
+      if event.key in (pygame.K_s, pygame.K_DOWN):
+        mover_jogador(0, 1)  # Baixo
+      if event.key in (pygame.K_a, pygame.K_LEFT):
+        mover_jogador(-1, 0)  # Esquerda
+      if event.key in (pygame.K_d, pygame.K_RIGHT):
+        mover_jogador(1, 0)  # Direita
 
   screen.fill(black)
   desenhar_maze(maze)
@@ -150,6 +172,7 @@ while running:
     pygame.display.flip()
     cor_escolhida = cor_jogador()
     mostrar_abertura = False
+  pygame.draw.rect(screen, cor_escolhida, (player_x * cell_size, player_y * cell_size, cell_size, cell_size))
 
   pygame.display.flip()
   clock.tick(60)
