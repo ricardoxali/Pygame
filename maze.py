@@ -133,12 +133,28 @@ def cor_escolhida(a):
     cor, light_cor = (255, 255, 0), (255, 255, 200)
   return cor, light_cor
 
+def cronometro(t):
+  tempo_total = pygame.time.get_ticks() - t # Milissegundos
+  minutos = (tempo_total // 1000) // 60
+  segundos = (tempo_total // 1000) % 60
+  font = pygame.font.SysFont('Arial', 35, bold=True)
+  cronometro = font.render(f'{minutos:02}:{segundos:02}', True, cor_jogador)
+  x = (screen_width // 2) - cronometro.get_width() // 2
+  screen.blit(cronometro, (x, -2))
+
+def verificar_vitoria():
+  if player_x == 41 and player_y == 20:
+    return True
+  else:
+    return False
+  
 cell_size = 32
 maze_width = 41
 maze_height = 21 
 screen_width = maze_width * cell_size
 screen_height = maze_height * cell_size
 
+start_time = pygame.time.get_ticks()
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('Labirinto')
@@ -160,6 +176,7 @@ garantir_caminho_saida()
 maze[maze_height - 2][maze_width - 1] = 0  # Substitui a parede pela saída
 maze[maze_height - 2][maze_width - 2] = 0  # Garante caminho antes da saída
 
+cor_jogador = 'grey'
 mostrar_abertura = True
 teclas_pressionadas = {
     pygame.K_w: False, pygame.K_UP: False,
@@ -180,6 +197,7 @@ while running:
 
   screen.fill('black')
   desenhar_maze(maze)
+  cronometro(start_time)
   if mostrar_abertura:
     tela_abertura()
     pygame.display.flip()
