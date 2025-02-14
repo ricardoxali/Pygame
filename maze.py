@@ -105,18 +105,18 @@ def cor():
 def mover_jogador():
     global player_x, player_y
     dx, dy = 0, 0
-    if teclas_pressionadas.get(pygame.K_w) or teclas_pressionadas.get(pygame.K_UP):
+    if teclas_pressionadas.get(pygame.K_w) or teclas_pressionadas.get(pygame.K_UP): # Cima
         dy = -1
-    if teclas_pressionadas.get(pygame.K_s) or teclas_pressionadas.get(pygame.K_DOWN):
+    if teclas_pressionadas.get(pygame.K_s) or teclas_pressionadas.get(pygame.K_DOWN): # Baixo
         dy = 1
-    if teclas_pressionadas.get(pygame.K_a) or teclas_pressionadas.get(pygame.K_LEFT):
+    if teclas_pressionadas.get(pygame.K_a) or teclas_pressionadas.get(pygame.K_LEFT): # Esquerda
         dx = -1
-    if teclas_pressionadas.get(pygame.K_d) or teclas_pressionadas.get(pygame.K_RIGHT):
+    if teclas_pressionadas.get(pygame.K_d) or teclas_pressionadas.get(pygame.K_RIGHT): # Direita
         dx = 1
     nx, ny = player_x + dx, player_y + dy
-    if maze[ny][nx] == 0 or maze[ny][nx] == 2:
+    if 0 < nx < maze_width and 0 < ny < maze_height - 1 and (maze[ny][nx] == 0 or maze[ny][nx] == 2):
         player_x, player_y = nx, ny
-        maze[ny][nx] = 2  # Marca o caminho percorrido
+        maze[ny][nx] = 2 # Marca o caminho percorrido
 
 def cor_escolhida(a):
   if a == 'r':
@@ -161,21 +161,13 @@ def cronometro(t):
   screen.blit(cronometro, (x, -2))
 
 def verificar_vitoria():
-  if player_x == 41 and player_y == 20:
-    return True
-  else:
-    return False
+    return player_x == maze_width - 1 and player_y == maze_height - 2
   
-def tela_vitoria(v):
-  if v == False:
-    return None
-  if v == True:
-    # Fundo preto com transparência
+def tela_vitoria():
     fundo = pygame.Surface([screen_width, screen_height])
-    fundo.fill((0,0,0))
+    fundo.fill((0, 0, 0))
     fundo.set_alpha(190)
-    screen.blit(fundo, (0,0))
-    
+    screen.blit(fundo, (0, 0))    
 
 cell_size = 32
 maze_width = 41
@@ -205,7 +197,6 @@ garantir_caminho_saida()
 maze[maze_height - 2][maze_width - 1] = 0  # Substitui a parede pela saída
 maze[maze_height - 2][maze_width - 2] = 0  # Garante caminho antes da saída
 
-cor_jogador = 'grey'
 mostrar_abertura = True
 teclas_pressionadas = {
     pygame.K_w: False, pygame.K_UP: False,
@@ -226,15 +217,17 @@ while running:
 
   screen.fill('black')
   desenhar_maze(maze)
-  cronometro(start_time)
   if mostrar_abertura:
     tela_abertura()
     pygame.display.flip()
     cor_jogador, cor_pintura, contraste1, contraste2 = cor_escolhida(cor())
     mostrar_abertura = False
   pygame.draw.rect(screen, cor_jogador, (player_x * cell_size, player_y * cell_size, cell_size, cell_size))
+  cronometro(start_time)
   mover_jogador()
-
+  if verificar_vitoria():
+    tela_vitoria()
+    running = False
   pygame.display.flip()
   clock.tick(12)
 
