@@ -31,9 +31,12 @@ def desenhar_maze(m):
   for y in range(maze_height):
       for x in range(maze_width):
           if maze[y][x] == 0:
-            cor = white 
+            cor = 'white'
+            maze[1][1] = 2
+          elif maze[y][x] == 2:
+            cor = cor_pintura
           else:
-            cor = black
+            cor = 'black'
           pygame.draw.rect(screen, cor, (x * cell_size, y * cell_size, cell_size, cell_size))
 
 def tela_abertura():
@@ -45,19 +48,19 @@ def tela_abertura():
 
   # Texto
   font_bold = pygame.font.SysFont('Arial', 38, bold = True)
-  objetivo = font_bold.render(f'OBJETIVO:', True, white)
+  objetivo = font_bold.render(f'OBJETIVO:', True, 'white')
   x = (screen_width // 2) - objetivo.get_width() // 2
   screen.blit(objetivo, (x, 35))
 
   font = pygame.font.SysFont('Arial', 35)
-  explicacao = font.render(f'ESCAPAR DO LABIRINTO NO', True, white)
-  explicacao1 = font.render(f'MENOR TEMPO QUE CONSEGUIR', True, white)
+  explicacao = font.render(f'ESCAPAR DO LABIRINTO NO', True, 'white')
+  explicacao1 = font.render(f'MENOR TEMPO QUE CONSEGUIR', True, 'white')
   x = (screen_width // 2) - explicacao.get_width() // 2
   screen.blit(explicacao, (x, 100))
   x = (screen_width // 2) - explicacao1.get_width() // 2
   screen.blit(explicacao1, (x, 150))
 
-  escolha = font_bold.render(f'ESCOLHA A COR DO SEU PERSONAGEM:', True, white)
+  escolha = font_bold.render(f'ESCOLHA A COR DO SEU PERSONAGEM:', True, 'white')
   x = (screen_width // 2) - escolha.get_width() // 2
   screen.blit(escolha, (x, 270))
 
@@ -79,7 +82,7 @@ def tela_abertura():
   screen.blit(blue, (x, 330))
   screen.blit(yellow, (x, 500))
 
-def cor_jogador():
+def cor():
   while True:
       for event in pygame.event.get():
           if event.type == pygame.QUIT:
@@ -99,17 +102,36 @@ def cor_jogador():
               if event.key == pygame.K_y:
                   return 'y'
 
-def mover_jogador(dx, dy):
+def mover_jogador():
     global player_x, player_y
+    dx, dy = 0, 0
+    if teclas_pressionadas.get(pygame.K_w) or teclas_pressionadas.get(pygame.K_UP):
+        dy = -1
+    if teclas_pressionadas.get(pygame.K_s) or teclas_pressionadas.get(pygame.K_DOWN):
+        dy = 1
+    if teclas_pressionadas.get(pygame.K_a) or teclas_pressionadas.get(pygame.K_LEFT):
+        dx = -1
+    if teclas_pressionadas.get(pygame.K_d) or teclas_pressionadas.get(pygame.K_RIGHT):
+        dx = 1
     nx, ny = player_x + dx, player_y + dy
-    if maze[ny][nx] == 0:  # Verifica se o próximo movimento é um caminho
+    if maze[ny][nx] == 0 or maze[ny][nx] == 2:
         player_x, player_y = nx, ny
+        maze[ny][nx] = 2  # Marca o caminho percorrido
 
 def cor_escolhida(a):
-   if a == 'r':
-      cor, light_cor = (255, 0, 0), (255, 125, 125)
-  if a == 
-
+  if a == 'r':
+    cor, light_cor = (255, 0, 0), (255, 125, 125)
+  if a == 'g':
+    cor, light_cor = (0, 255, 0), (125, 255, 125)
+  if a == 'b':
+    cor, light_cor = (0, 0, 255), (125, 125, 255)
+  if a == 'c':
+    cor, light_cor = (0, 255, 255), (200, 255, 225)
+  if a == 'm':
+    cor, light_cor = (255, 0, 255), (255, 200, 255)
+  if a == 'y':
+    cor, light_cor = (255, 255, 0), (255, 255, 200)
+  return cor, light_cor
 
 cell_size = 32
 maze_width = 41
@@ -117,23 +139,13 @@ maze_height = 21
 screen_width = maze_width * cell_size
 screen_height = maze_height * cell_size
 
-# Cores
-white = (255, 255, 255)
-black = (0, 0, 0)
-red, light_red = (255, 0, 0), (255, 125, 125)
-green, light_green = (0, 255, 0), (125, 255, 125)
-blue, light_blue = (0, 0, 255), (125, 125, 255)
-cyan, light_cyan = (0, 255, 255), (200, 255, 225)
-magenta, light_magenta = (255, 0, 255), (255, 200, 255)
-yellow, light_yellow = (255, 255, 0), (225, 255, 200)
-
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('Labirinto')
 
 player_x, player_y = 1, 1  # Posição inicial do jogado
 
-maze = [[1 for _ in range(maze_width)] for _ in range(maze_height)] # 1 = parede; 0 = caminho;
+maze = [[1 for _ in range(maze_width)] for _ in range(maze_height)] # 1 = parede; 0 = caminho; 2 = caminho pintado
 direcoes = [
   (0, -2), # Cima
   (0, 2), # Baixo
@@ -149,6 +161,12 @@ maze[maze_height - 2][maze_width - 1] = 0  # Substitui a parede pela saída
 maze[maze_height - 2][maze_width - 2] = 0  # Garante caminho antes da saída
 
 mostrar_abertura = True
+teclas_pressionadas = {
+    pygame.K_w: False, pygame.K_UP: False,
+    pygame.K_s: False, pygame.K_DOWN: False,
+    pygame.K_a: False, pygame.K_LEFT: False,
+    pygame.K_d: False, pygame.K_RIGHT: False,
+}
 
 running = True
 while running:
@@ -156,25 +174,21 @@ while running:
     if event.type == pygame.QUIT: # Sair do jogo
       running = False
     if event.type == pygame.KEYDOWN: # Mover o jogador
-      if event.key in (pygame.K_w, pygame.K_UP):
-        mover_jogador(0, -1)  # Cima
-      if event.key in (pygame.K_s, pygame.K_DOWN):
-        mover_jogador(0, 1)  # Baixo
-      if event.key in (pygame.K_a, pygame.K_LEFT):
-        mover_jogador(-1, 0)  # Esquerda
-      if event.key in (pygame.K_d, pygame.K_RIGHT):
-        mover_jogador(1, 0)  # Direita
+        teclas_pressionadas[event.key] = True
+    if event.type == pygame.KEYUP: # Parar de mover o jogador
+        teclas_pressionadas[event.key] = False
 
-  screen.fill(black)
+  screen.fill('black')
   desenhar_maze(maze)
   if mostrar_abertura:
     tela_abertura()
     pygame.display.flip()
-    cor_escolhida = cor_jogador()
+    cor_jogador, cor_pintura = cor_escolhida(cor())
     mostrar_abertura = False
-  pygame.draw.rect(screen, cor_escolhida, (player_x * cell_size, player_y * cell_size, cell_size, cell_size))
+  pygame.draw.rect(screen, cor_jogador, (player_x * cell_size, player_y * cell_size, cell_size, cell_size))
+  mover_jogador()
 
   pygame.display.flip()
-  clock.tick(60)
+  clock.tick(12)
 
 pygame.quit()
