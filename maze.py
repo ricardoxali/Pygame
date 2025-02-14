@@ -120,18 +120,36 @@ def mover_jogador():
 
 def cor_escolhida(a):
   if a == 'r':
-    cor, light_cor = (255, 0, 0), (255, 125, 125)
+    cor = (255, 0, 0) # Vermelho
+    light_cor = (255, 125, 125) # Vermelho claro
+    triadico1 = (0, 255, 0) # Verde
+    triadico2 = (0, 0, 255) # Azul
   if a == 'g':
-    cor, light_cor = (0, 255, 0), (125, 255, 125)
+    cor = (0, 255, 0) # Verde
+    light_cor = (125, 255, 125) # Verde claro
+    triadico1 = (255, 0, 0) # Vermelho
+    triadico2 = (0, 0, 255) # Azul
   if a == 'b':
-    cor, light_cor = (0, 0, 255), (125, 125, 255)
+    cor = (0, 0, 255) # Azul
+    light_cor = (125, 125, 255) # Azul claro
+    triadico1 = (255, 0 ,0) # Vermelho
+    triadico2 = (0, 255, 0) # Verde
   if a == 'c':
-    cor, light_cor = (0, 255, 255), (200, 255, 225)
+    cor = (0, 255, 255) # Ciano
+    light_cor = (200, 255, 225) # Ciano claro
+    triadico1 = (255, 0, 255) # Magenta
+    triadico2 = (255, 255, 0) # Amarelo
   if a == 'm':
-    cor, light_cor = (255, 0, 255), (255, 200, 255)
+    cor = (255, 0, 255) # Magenta
+    light_cor = (255, 200, 255) # Magenta claro
+    triadico1 = (0, 255, 255) # Ciano
+    triadico2 = (255, 255, 0) # Amarelo
   if a == 'y':
-    cor, light_cor = (255, 255, 0), (255, 255, 200)
-  return cor, light_cor
+    cor = (255, 255, 0) # Amarelo
+    light_cor = (255, 255, 200) # Amarelo claro
+    triadico1 = (0, 255, 255) # Ciano
+    triadico2 = (255, 0, 255) # Magenta
+  return cor, light_cor, triadico1, triadico2
 
 def cronometro(t):
   tempo_total = pygame.time.get_ticks() - t # Milissegundos
@@ -148,6 +166,17 @@ def verificar_vitoria():
   else:
     return False
   
+def tela_vitoria(v):
+  if v == False:
+    return None
+  if v == True:
+    # Fundo preto com transparência
+    fundo = pygame.Surface([screen_width, screen_height])
+    fundo.fill((0,0,0))
+    fundo.set_alpha(190)
+    screen.blit(fundo, (0,0))
+    
+
 cell_size = 32
 maze_width = 41
 maze_height = 21 
@@ -201,7 +230,7 @@ while running:
   if mostrar_abertura:
     tela_abertura()
     pygame.display.flip()
-    cor_jogador, cor_pintura = cor_escolhida(cor())
+    cor_jogador, cor_pintura, contraste1, contraste2 = cor_escolhida(cor())
     mostrar_abertura = False
   pygame.draw.rect(screen, cor_jogador, (player_x * cell_size, player_y * cell_size, cell_size, cell_size))
   mover_jogador()
