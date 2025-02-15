@@ -127,8 +127,8 @@ def cor_escolhida(a):
   if a == 'g':
     cor = (0, 255, 0) # Verde
     light_cor = (125, 255, 125) # Verde claro
-    triadico1 = (255, 0, 0) # Vermelho
-    triadico2 = (0, 0, 255) # Azul
+    triadico1 = (0, 0, 255) # Azul
+    triadico2 = (255, 0, 0) # Vermelho
   if a == 'b':
     cor = (0, 0, 255) # Azul
     light_cor = (125, 125, 255) # Azul claro
@@ -152,22 +152,96 @@ def cor_escolhida(a):
   return cor, light_cor, triadico1, triadico2
 
 def cronometro(t):
-  tempo_total = pygame.time.get_ticks() - t # Milissegundos
-  minutos = (tempo_total // 1000) // 60
-  segundos = (tempo_total // 1000) % 60
-  font = pygame.font.SysFont('Arial', 35, bold=True)
-  cronometro = font.render(f'{minutos:02}:{segundos:02}', True, cor_jogador)
+  global tempo_total, tempo
+  if verificar_vitoria():
+     return None
+  tempo = pygame.time.get_ticks() - t # Milissegundos
+  minutos = (tempo // 1000) // 60
+  segundos = (tempo // 1000) % 60
+  milissegundos = (tempo % 1000) // 10
+  tempo_total = f'{minutos:02}:{segundos:02}:{milissegundos:02}'
+  font = pygame.font.SysFont('Arial', 35, bold = True)
+  cronometro = font.render(tempo_total, True, cor_jogador)
   x = (screen_width // 2) - cronometro.get_width() // 2
   screen.blit(cronometro, (x, -2))
 
 def verificar_vitoria():
-    return player_x == maze_width - 1 and player_y == maze_height - 2
-  
+  return maze[player_y][player_x] == maze[maze_height - 2][maze_width - 1]
+
 def tela_vitoria():
-    fundo = pygame.Surface([screen_width, screen_height])
-    fundo.fill((0, 0, 0))
-    fundo.set_alpha(190)
-    screen.blit(fundo, (0, 0))    
+  # Fundo preto com transparência
+  fundo = pygame.Surface([screen_width, screen_height])
+  fundo.fill((0, 0, 0))
+  fundo.set_alpha(240)
+  screen.blit(fundo, (0, 0))
+
+  # Texto
+  font_bold = pygame.font.SysFont('Arial', 38, bold = True)
+  tempo_levado = font_bold.render(f'TEMPO LEVADO:', True, cor_jogador)
+  x = (screen_width // 2) - tempo_levado.get_width() // 2
+  screen.blit(tempo_levado, (x, 35))
+
+  font = pygame.font.SysFont('Arial', 35)
+  cronometro_levado = font.render(f'{tempo_total}', True, cor_jogador)
+  x = (screen_width // 2) - cronometro_levado.get_width() // 2
+  screen.blit(cronometro_levado, (x, 75))
+
+  font_bold = pygame.font.SysFont('Arial', 30, bold = True)
+  melhor_tempo = font_bold.render(f'MELHOR TEMPO:', True, cor_jogador)
+  x = (screen_width // 2) - melhor_tempo.get_width() // 2
+  screen.blit(melhor_tempo, (x, 150))
+
+  font = pygame.font.SysFont('Arial', 27)
+  cronometro_melhor = font.render(best_tempo(), True, cor_jogador)
+  x = (screen_width // 2) - cronometro_melhor.get_width() // 2
+  screen.blit(cronometro_melhor, (x, 190))
+
+  font_bold = pygame.font.SysFont('Arial', 30, bold = True)
+  novamente = font_bold.render(f'DESEJA JOGAR NOVAMENTE?', True, 'white')
+  x = (screen_width // 2) - novamente.get_width() // 2
+  screen.blit(novamente, (x, 280))    
+
+  font_bold = pygame.font.SysFont('Arial', 27, bold = True)
+  font = pygame.font.SysFont('Arial', 20)
+
+  nao = font_bold.render(f'NÃO', True, cor_jogador)
+  x = (screen_width // 2) - nao.get_width() // 2
+  screen.blit(nao, (x, 510))
+  zero = font.render(f'(PRESSIONE 0)', True, cor_jogador)
+  x = (screen_width // 2) - zero.get_width() // 2
+  screen.blit(zero, (x, 540))
+
+  sim_mesmo = font_bold.render(f'SIM, NO MESMO LABIRINTO', True, contraste1)
+  screen.blit(sim_mesmo, (110, 410))
+  enter = font.render(f'(PRESSIONE ENTER)', True, contraste1)
+  screen.blit(enter, (198, 440))
+
+  sim_diferente = font_bold.render(f'SIM, EM OUTRO LABIRINTO', True, contraste2)
+  screen.blit(sim_diferente, (850, 410))
+  espaco = font.render(f'(PRESSIONE ESPAÇO)', True, contraste2)
+  screen.blit(espaco, (940, 440))
+
+def novamente():
+  while True:
+      for event in pygame.event.get():
+          if event.type == pygame.QUIT:
+              pygame.quit()
+              exit()
+          if event.type == pygame.KEYDOWN:
+              if event.key == pygame.K_SPACE:
+                return 'dnv'
+              if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
+                 return 'msm'
+              if event.key == pygame.K_0 or event.key == pygame.K_KP0:
+                 return 'nao'
+
+def best_tempo():
+  tempos_jogador.append(tempo)
+  best_time = min(tempos_jogador)
+  minutos = (best_time // 1000) // 60
+  segundos = (best_time // 1000) % 60
+  milissegundos = (best_time % 1000) // 10
+  return f'{minutos:02}:{segundos:02}:{milissegundos:02}'
 
 cell_size = 32
 maze_width = 41
@@ -204,6 +278,7 @@ teclas_pressionadas = {
     pygame.K_a: False, pygame.K_LEFT: False,
     pygame.K_d: False, pygame.K_RIGHT: False,
 }
+tempos_jogador = []
 
 running = True
 while running:
@@ -214,7 +289,7 @@ while running:
         teclas_pressionadas[event.key] = True
     if event.type == pygame.KEYUP: # Parar de mover o jogador
         teclas_pressionadas[event.key] = False
-
+  
   screen.fill('black')
   desenhar_maze(maze)
   if mostrar_abertura:
@@ -223,12 +298,14 @@ while running:
     cor_jogador, cor_pintura, contraste1, contraste2 = cor_escolhida(cor())
     mostrar_abertura = False
   pygame.draw.rect(screen, cor_jogador, (player_x * cell_size, player_y * cell_size, cell_size, cell_size))
-  cronometro(start_time)
   mover_jogador()
+  pygame.draw.rect(screen, cor_jogador, (player_x * cell_size, player_y * cell_size, cell_size, cell_size))
+  cronometro(start_time)
+  pygame.display.flip()
   if verificar_vitoria():
     tela_vitoria()
-    running = False
-  pygame.display.flip()
+    pygame.display.flip()
+    novamente()
   clock.tick(12)
 
 pygame.quit()
