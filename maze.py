@@ -3,7 +3,7 @@ import random
 
 pygame.init()
 
-def gerar_maze(x, y):
+def gerar_maze(x, y): # 1 = parede; 0 = caminho; 2 = caminho pintado
   maze[y][x] = 0 # Cria o caminho
   random.shuffle(direcoes)
   for dx, dy in direcoes: # dx e dy = deslocamento horizontal e vertical
@@ -132,21 +132,21 @@ def cor_escolhida(a):
   if a == 'b':
     cor = (0, 0, 255) # Azul
     light_cor = (125, 125, 255) # Azul claro
-    triadico1 = (255, 0 ,0) # Vermelho
-    triadico2 = (0, 255, 0) # Verde
+    triadico1 = (0, 255 ,0) # Verde
+    triadico2 = (255, 0, 0) # Vermelho
   if a == 'c':
     cor = (0, 255, 255) # Ciano
-    light_cor = (200, 255, 225) # Ciano claro
+    light_cor = (170, 255, 225) # Ciano claro
     triadico1 = (255, 0, 255) # Magenta
     triadico2 = (255, 255, 0) # Amarelo
   if a == 'm':
     cor = (255, 0, 255) # Magenta
-    light_cor = (255, 200, 255) # Magenta claro
+    light_cor = (255, 170, 255) # Magenta claro
     triadico1 = (0, 255, 255) # Ciano
     triadico2 = (255, 255, 0) # Amarelo
   if a == 'y':
     cor = (255, 255, 0) # Amarelo
-    light_cor = (255, 255, 200) # Amarelo claro
+    light_cor = (255, 255, 170) # Amarelo claro
     triadico1 = (0, 255, 255) # Ciano
     triadico2 = (255, 0, 255) # Magenta
   return cor, light_cor, triadico1, triadico2
@@ -172,7 +172,7 @@ def tela_vitoria():
   # Fundo preto com transparência
   fundo = pygame.Surface([screen_width, screen_height])
   fundo.fill((0, 0, 0))
-  fundo.set_alpha(240)
+  fundo.set_alpha(220)
   screen.blit(fundo, (0, 0))
 
   # Texto
@@ -256,7 +256,7 @@ pygame.display.set_caption('Labirinto')
 
 player_x, player_y = 1, 1  # Posição inicial do jogado
 
-maze = [[1 for _ in range(maze_width)] for _ in range(maze_height)] # 1 = parede; 0 = caminho; 2 = caminho pintado
+maze = [[1 for _ in range(maze_width)] for _ in range(maze_height)]
 direcoes = [
   (0, -2), # Cima
   (0, 2), # Baixo
