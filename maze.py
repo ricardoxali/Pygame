@@ -52,7 +52,7 @@ def tela_abertura():
   # Fundo preto com transparência
   fundo = pygame.Surface([screen_width, screen_height])
   fundo.fill((0,0,0))
-  fundo.set_alpha(190)
+  fundo.set_alpha(230)
   screen.blit(fundo, (0,0))
 
   # Texto
@@ -181,7 +181,7 @@ def tela_vitoria():
   # Fundo preto com transparência
   fundo = pygame.Surface([screen_width, screen_height])
   fundo.fill((0, 0, 0))
-  fundo.set_alpha(220)
+  fundo.set_alpha(230)
   screen.blit(fundo, (0, 0))
 
   # Texto
@@ -254,7 +254,7 @@ def best_tempo():
   return f'{minutos:02}:{segundos:02}:{milissegundos:02}'
 
 def outro_maze():
-  global player_x, player_y, start_time, maze, ganhou, dnv
+  global player_x, player_y, start_time, maze, ganhou, dnv, ultimo_maze
   maze = [[1 for _ in range(maze_width)] for _ in range(maze_height)]
   gerar_maze(1, 1)  # Gera um novo labirinto    
   garantir_caminho_saida()  # Garante um caminho até a saída
@@ -262,15 +262,16 @@ def outro_maze():
   start_time = pygame.time.get_ticks()  # Reinicia o cronômetro
   ganhou = False
   dnv = None
+  ultimo_maze = [linha[:] for linha in maze]
   desenhar_maze_novo(maze)  # Desenha o novo labirinto
   for key in teclas_pressionadas:
     teclas_pressionadas[key] = False
   maze[maze_height - 2][maze_width - 1] = 0  # Substitui a parede pela saída
   maze[maze_height - 2][maze_width - 2] = 0  # Garante caminho antes da saída
 
-def mesmo_maze(m):
+def mesmo_maze():
   global player_x, player_y, start_time, maze, ganhou, dnv
-  maze = m
+  maze = ultimo_maze
   gerar_maze(1, 1)  # Gera um novo labirinto    
   garantir_caminho_saida()  # Garante um caminho até a saída
   player_x, player_y = 1, 1  # Redefine a posição inicial do jogador
@@ -306,7 +307,7 @@ direcoes = [
 
 gerar_maze(1, 1) # Define o primeiro caminho (a entrada) na célula 1,1
 garantir_caminho_saida()
-maze_original = [linha[:] for linha in maze]  # Guarda o labirinto original
+ultimo_maze = [linha[:] for linha in maze]  # Guarda o labirinto original
 
 
 # Saída fixa
@@ -347,17 +348,19 @@ while running:
   pygame.display.flip()
   ganhou = verificar_vitoria()
   if ganhou:
+    tempos_jogador.append(tempo)
+    ganhou = False
     tela_vitoria()
     pygame.display.flip()
     dnv = novamente()
-    ganhou = False
 
   if dnv == 'nao':
     running = False
   if dnv == 'dnv':
+    tempos_jogador = []
     outro_maze()
   if dnv == 'msm':
-    mesmo_maze(maze_original)
+    mesmo_maze()
 
   clock.tick(12)
 pygame.quit()
