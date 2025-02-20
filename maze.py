@@ -271,7 +271,7 @@ def outro_maze():
 
 def mesmo_maze():
   global player_x, player_y, start_time, maze, ganhou, dnv
-  maze = ultimo_maze
+  maze = [linha[:] for linha in ultimo_maze]
   gerar_maze(1, 1)  # Gera um novo labirinto    
   garantir_caminho_saida()  # Garante um caminho até a saída
   player_x, player_y = 1, 1  # Redefine a posição inicial do jogador
