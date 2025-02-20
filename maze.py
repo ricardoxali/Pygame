@@ -135,7 +135,7 @@ def cor_escolhida(a):
     triadico2 = (0, 0, 255) # Azul
   if a == 'g':
     cor = (0, 255, 0) # Verde
-    light_cor = (125, 255, 125) # Verde claro
+    light_cor = (170, 255, 170) # Verde claro
     triadico1 = (0, 0, 255) # Azul
     triadico2 = (255, 0, 0) # Vermelho
   if a == 'b':
@@ -155,7 +155,7 @@ def cor_escolhida(a):
     triadico2 = (255, 255, 0) # Amarelo
   if a == 'y':
     cor = (255, 255, 0) # Amarelo
-    light_cor = (255, 255, 170) # Amarelo claro
+    light_cor = (255, 255, 175) # Amarelo claro
     triadico1 = (0, 255, 255) # Ciano
     triadico2 = (255, 0, 255) # Magenta
   return cor, light_cor, triadico1, triadico2
