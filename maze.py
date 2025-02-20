@@ -1,5 +1,5 @@
-import pygame
-import random
+import pygame, random
+from sys import exit
 
 pygame.init()
 
@@ -237,6 +237,7 @@ def novamente():
           if event.type == pygame.QUIT:
               running = False
               pygame.quit()
+              exit()
           if event.type == pygame.KEYDOWN:
               if event.key == pygame.K_SPACE:
                 return 'dnv'
@@ -329,6 +330,7 @@ while running:
   for event in pygame.event.get():
     if event.type == pygame.QUIT: # Sair do jogo
       running = False
+      exit()
     if event.type == pygame.KEYDOWN: # Mover o jogador
         teclas_pressionadas[event.key] = True
     if event.type == pygame.KEYUP: # Parar de mover o jogador
@@ -356,10 +358,10 @@ while running:
 
   if dnv == 'nao':
     running = False
-  if dnv == 'dnv':
+  elif dnv == 'dnv':
     tempos_jogador = []
     outro_maze()
-  if dnv == 'msm':
+  elif dnv == 'msm':
     mesmo_maze()
 
   clock.tick(12)
