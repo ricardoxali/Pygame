@@ -291,7 +291,6 @@ maze_height = 21
 screen_width = maze_width * cell_size
 screen_height = maze_height * cell_size
 
-start_time = pygame.time.get_ticks()
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('Labirinto')
@@ -343,6 +342,7 @@ while running:
     pygame.display.flip()
     cor_jogador, cor_pintura, contraste1, contraste2 = cor_escolhida(cor())
     mostrar_abertura = False
+    start_time = pygame.time.get_ticks()
   pygame.draw.rect(screen, cor_jogador, (player_x * cell_size, player_y * cell_size, cell_size, cell_size))
   mover_jogador()
   pygame.draw.rect(screen, cor_jogador, (player_x * cell_size, player_y * cell_size, cell_size, cell_size))
