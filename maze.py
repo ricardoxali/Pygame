@@ -223,12 +223,12 @@ def tela_vitoria():
   sim_mesmo = font_bold.render(f'SIM, NO MESMO LABIRINTO', True, contraste1)
   screen.blit(sim_mesmo, (110, 410))
   enter = font.render(f'(PRESSIONE ENTER)', True, contraste1)
-  screen.blit(enter, (198, 440))
+  screen.blit(enter, (170, 440))
 
   sim_diferente = font_bold.render(f'SIM, EM OUTRO LABIRINTO', True, contraste2)
   screen.blit(sim_diferente, (850, 410))
   espaco = font.render(f'(PRESSIONE ESPAÇO)', True, contraste2)
-  screen.blit(espaco, (940, 440))
+  screen.blit(espaco, (910, 440))
 
 def novamente():
   global running
@@ -285,6 +285,141 @@ def mesmo_maze():
   maze[maze_height - 2][maze_width - 1] = 0  # Substitui a parede pela saída
   maze[maze_height - 2][maze_width - 2] = 0  # Garante caminho antes da saída
 
+def temporizador(s):
+    global running
+    screen.fill((0, 0, 0))
+    desenhar_maze(maze)
+    pygame.draw.rect(screen, cor_jogador, (player_x * cell_size, player_y * cell_size, cell_size, cell_size))
+    fundo = pygame.Surface([screen_width, screen_height])
+    fundo.fill((0, 0, 0))
+    fundo.set_alpha(230)
+    screen.blit(fundo, (0, 0))
+    
+    font_bold = pygame.font.SysFont('Arial', 100, bold=True)
+
+    pronto = font_bold.render(f'PRONTO?', True, cor_jogador)
+    x = (screen_width // 2) - pronto.get_width() // 2
+    y = (screen_height // 2) - pronto.get_height() // 2
+    screen.blit(pronto, (x, y))
+    pygame.display.flip()
+
+    pygame.time.wait(2000)
+    screen.fill((0, 0, 0))
+    desenhar_maze(maze)
+    pygame.draw.rect(screen, cor_jogador, (player_x * cell_size, player_y * cell_size, cell_size, cell_size))
+    fundo = pygame.Surface([screen_width, screen_height])
+    fundo.fill((0, 0, 0))
+    fundo.set_alpha(230)
+    screen.blit(fundo, (0, 0))
+
+    for i in range(s, 0, -1):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT: # Sair do jogo
+                running = False
+                pygame.quit()
+                exit()
+
+        numero = font_bold.render(f'{i}', True, cor_jogador)
+        x = (screen_width // 2) - numero.get_width() // 2
+        y = (screen_height // 2) - numero.get_height() // 2
+        screen.blit(numero, (x, y))
+        
+        pygame.display.flip()
+
+        pygame.time.wait(1000)
+        screen.fill((0, 0, 0))
+        desenhar_maze(maze)
+        pygame.draw.rect(screen, cor_jogador, (player_x * cell_size, player_y * cell_size, cell_size, cell_size))
+        fundo = pygame.Surface([screen_width, screen_height])
+        fundo.fill((0, 0, 0))
+        fundo.set_alpha(230)
+        screen.blit(fundo, (0, 0))
+
+    vai = font_bold.render(f'VAI!', True, cor_jogador)
+    x = (screen_width // 2) - vai.get_width() // 2
+    y = (screen_height // 2) - vai.get_height() // 2
+    screen.blit(vai, (x, y))
+    pygame.display.flip()
+    pygame.time.wait(100)
+
+def tela_mesma_cor():
+  # Fundo preto com transparência
+  fundo = pygame.Surface([screen_width, screen_height])
+  fundo.fill((0, 0, 0))
+  fundo.set_alpha(230)
+  screen.blit(fundo, (0, 0))
+
+  #Texto
+  font_bold = pygame.font.SysFont('Arial', 45, bold = True)
+  mesma = font_bold.render(f'DESEJA JOGAR', True, 'white')
+  x = (screen_width // 2) - mesma.get_width() // 2
+  screen.blit(mesma, (x, 250))
+  mesma1 = font_bold.render(f'COM A MESMA COR?', True, 'white')
+  x = (screen_width // 2) - mesma1.get_width() // 2
+  screen.blit(mesma1, (x, 285))
+  font_bold = pygame.font.SysFont('Arial', 35, bold=True)
+  font = pygame.font.SysFont('Arial', 28)
+
+  sim = font_bold.render(f'SIM, COM A MESMA', True, cor_jogador)
+  screen.blit(sim, (190, 325))
+
+  enter = font.render(f'(PRESSIONE ENTER)', True, cor_jogador)
+  screen.blit(enter, (210, 480))
+
+  nao = font_bold.render(f'NÃO, QUERO MUDAR', True, contraste1)
+  screen.blit(nao, (815, 450))
+
+  espaco = font.render(f'(PRESSIONE ESPAÇO)', True, contraste1)
+  screen.blit(espaco, (840, 480))
+  pygame.display.flip()
+
+def mesma_cor():
+  global running
+  while True:
+      for event in pygame.event.get():
+          if event.type == pygame.QUIT:
+              running = False
+              pygame.quit()
+              exit()
+          if event.type == pygame.KEYDOWN:
+              if event.key == pygame.K_SPACE:
+                return 'outro'
+              if event.key == pygame.K_KP_ENTER or event.key == pygame.K_RETURN:
+                 return 'msm'
+              
+def tela_outra():
+  screen.fill((0, 0, 0))
+  desenhar_maze(maze)
+  fundo = pygame.Surface([screen_width, screen_height])
+  fundo.fill((0,0,0))
+  fundo.set_alpha(230)
+  screen.blit(fundo, (0,0))
+
+  font_bold = pygame.font.SysFont('Arial', 35, bold=True)
+  escolha = font_bold.render(f'ESCOLHA A COR DO SEU PERSONAGEM:', True, 'white')
+  x = (screen_width // 2) - escolha.get_width() // 2
+  screen.blit(escolha, (x, 200))
+
+  # Cores
+  red = pygame.image.load('imagens\\red.png')
+  green = pygame.image.load('imagens\\green.png')
+  blue = pygame.image.load('imagens\\blue.png')
+  cyan = pygame.image.load('imagens\\cyan.png')
+  magenta = pygame.image.load('imagens\\magenta.png')
+  yellow = pygame.image.load('imagens\\yellow.png')
+
+  x = (screen_width // 2) - green.get_width() // 2
+  screen.blit(green, (x, 300))
+  screen.blit(magenta, (x, 470))
+  x /= 2
+  screen.blit(red, (x, 300))
+  screen.blit(cyan, (x, 470))
+  x += 2 * x
+  screen.blit(blue, (x, 300))
+  screen.blit(yellow, (x, 470))
+
+  pygame.display.flip()
+
 cell_size = 32
 maze_width = 41
 maze_height = 21 
@@ -305,7 +440,7 @@ direcoes = [
   (2, 0) # Direira
 ]
 
-gerar_maze(1, 1) # Define o primeiro caminho (a entrada) na célula 1,1
+gerar_maze(1, 1) # Define a entrada na célula 1,1
 garantir_caminho_saida()
 ultimo_maze = [linha[:] for linha in maze]  # Guarda o labirinto original
 
@@ -329,6 +464,7 @@ while running:
   for event in pygame.event.get():
     if event.type == pygame.QUIT: # Sair do jogo
       running = False
+      pygame.quit()
       exit()
     if event.type == pygame.KEYDOWN: # Mover o jogador
         teclas_pressionadas[event.key] = True
@@ -342,6 +478,7 @@ while running:
     pygame.display.flip()
     cor_jogador, cor_pintura, contraste1, contraste2 = cor_escolhida(cor())
     mostrar_abertura = False
+    temporizador(3)
     start_time = pygame.time.get_ticks()
   pygame.draw.rect(screen, cor_jogador, (player_x * cell_size, player_y * cell_size, cell_size, cell_size))
   mover_jogador()
@@ -361,8 +498,20 @@ while running:
   elif dnv == 'dnv':
     tempos_jogador = []
     outro_maze()
+    tela_mesma_cor()
+    mesma = mesma_cor()
+    if mesma == 'outro':
+      tela_outra()
+      cor_jogador, cor_pintura, contraste1, contraste2 = cor_escolhida(cor())
+    temporizador(3)
   elif dnv == 'msm':
     mesmo_maze()
+    tela_mesma_cor()
+    mesma = mesma_cor()
+    if mesma == 'outro':
+      tela_outra()
+      cor_jogador, cor_pintura, contraste1, contraste2 = cor_escolhida(cor())
+    temporizador(3)
 
   clock.tick(12)
 pygame.quit()
