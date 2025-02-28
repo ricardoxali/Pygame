@@ -223,12 +223,12 @@ def tela_vitoria():
   sim_mesmo = font_bold.render(f'SIM, NO MESMO LABIRINTO', True, contraste1)
   screen.blit(sim_mesmo, (110, 410))
   enter = font.render(f'(PRESSIONE ENTER)', True, contraste1)
-  screen.blit(enter, (170, 440))
+  screen.blit(enter, (185, 440))
 
   sim_diferente = font_bold.render(f'SIM, EM OUTRO LABIRINTO', True, contraste2)
   screen.blit(sim_diferente, (850, 410))
   espaco = font.render(f'(PRESSIONE ESPAÇO)', True, contraste2)
-  screen.blit(espaco, (910, 440))
+  screen.blit(espaco, (925, 440))
 
 def novamente():
   global running
@@ -364,13 +364,13 @@ def tela_mesma_cor():
   screen.blit(sim, (225, 365))
 
   enter = font.render(f'(PRESSIONE ENTER)', True, cor_jogador)
-  screen.blit(enter, (260, 400))
+  screen.blit(enter, (285, 400))
 
   nao = font_bold.render(f'NÃO, QUERO MUDAR', True, contraste1)
   screen.blit(nao, (775, 365))
 
   espaco = font.render(f'(PRESSIONE ESPAÇO)', True, contraste1)
-  screen.blit(espaco, (815, 400))
+  screen.blit(espaco, (835, 400))
   pygame.display.flip()
 
 def mesma_cor():
