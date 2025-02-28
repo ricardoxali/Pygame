@@ -340,7 +340,7 @@ def temporizador(s):
     y = (screen_height // 2) - vai.get_height() // 2
     screen.blit(vai, (x, y))
     pygame.display.flip()
-    pygame.time.wait(100)
+    pygame.time.wait(250)
 
 def tela_mesma_cor():
   # Fundo preto com transparência
@@ -353,24 +353,24 @@ def tela_mesma_cor():
   font_bold = pygame.font.SysFont('Arial', 45, bold = True)
   mesma = font_bold.render(f'DESEJA JOGAR', True, 'white')
   x = (screen_width // 2) - mesma.get_width() // 2
-  screen.blit(mesma, (x, 250))
+  screen.blit(mesma, (x, 225))
   mesma1 = font_bold.render(f'COM A MESMA COR?', True, 'white')
   x = (screen_width // 2) - mesma1.get_width() // 2
-  screen.blit(mesma1, (x, 285))
+  screen.blit(mesma1, (x, 265))
   font_bold = pygame.font.SysFont('Arial', 35, bold=True)
-  font = pygame.font.SysFont('Arial', 28)
+  font = pygame.font.SysFont('Arial', 23)
 
   sim = font_bold.render(f'SIM, COM A MESMA', True, cor_jogador)
-  screen.blit(sim, (190, 325))
+  screen.blit(sim, (225, 365))
 
   enter = font.render(f'(PRESSIONE ENTER)', True, cor_jogador)
-  screen.blit(enter, (210, 480))
+  screen.blit(enter, (260, 400))
 
   nao = font_bold.render(f'NÃO, QUERO MUDAR', True, contraste1)
-  screen.blit(nao, (815, 450))
+  screen.blit(nao, (775, 365))
 
   espaco = font.render(f'(PRESSIONE ESPAÇO)', True, contraste1)
-  screen.blit(espaco, (840, 480))
+  screen.blit(espaco, (815, 400))
   pygame.display.flip()
 
 def mesma_cor():
